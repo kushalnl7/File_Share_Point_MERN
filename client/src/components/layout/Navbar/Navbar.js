@@ -18,7 +18,7 @@ function Navbar() {
 
   const logoutHandler = async (e) => {
     try {
-      const res = await axios.get(`http://localhost:5000/auth/logout`);
+      const res = await axios.get(`${process.env.REACT_APP_URL}/auth/logout`);
       toast.success(res.data);
       await getLoggedIn();
       await getSuperUser();
