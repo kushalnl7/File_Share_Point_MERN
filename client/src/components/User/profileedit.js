@@ -12,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import validateUserInfo from "./ValidateUserEdit";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+    },
+    errors:{
+        color: "red",
+        marginTop: "-20px",
+        marginLeft: "22px",
+        // marginBottom: "0px",
     },
 }));
 
@@ -36,8 +43,6 @@ export default function Editprofile() {
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [dob, setDob] = useState("");
-    const [mobile, setMobile] = useState("");
-    const [email, setEmail] = useState("");
     const getuser = async () => {
         const user_fetch = await axios.get(`${process.env.REACT_APP_URL}/auth/getuser`);
         setUser(user_fetch.data);
@@ -45,35 +50,30 @@ export default function Editprofile() {
         setFirstname(user_fetch.data.firstname)
         setLastname(user_fetch.data.lastname)
         setDob(user_fetch.data.dob.slice(0, 10))
-        setMobile(user_fetch.data.mobile)
-        setEmail(user_fetch.data.email)
-        console.log(firstname, lastname, mobile, email, dob);
+        console.log(firstname, lastname, dob);
     }
     useEffect(() => {
         getuser();
     }, []);
     
-    const values = {firstname, lastname, dob, mobile, email};
+    const values = {firstname, lastname, dob};
     
     async function editprofile(e) {
         e.preventDefault();
-        // setErrors(validateLoginInfo(values));
+        setErrors(validateUserInfo(values));
         try {
             const formData = {
                 firstname, 
                 lastname,
-                email, 
-                dob, 
-                mobile,
+                dob,
             };
             console.log(formData);
-            // console.log("Running 1");
-            // if(Object.keys(errors).length === 0){
-            // console.log(errors);
-            const edit_profile = await axios.post(`${process.env.REACT_APP_URL}/auth/editprofile`, formData);
-            toast.success(edit_profile.data);
-            history.push(`/`);
-            // }
+            console.log("Running 1");
+            if(Object.keys(errors).length === 0 && firstname!=="" && lastname!=="" && dob!==""){
+                const edit_profile = await axios.post(`${process.env.REACT_APP_URL}/auth/editprofile`, formData);
+                toast.success(edit_profile.data);
+                history.push(`/`);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -97,7 +97,7 @@ export default function Editprofile() {
               autoComplete="firstname"
             //   autoFocus
             />
-            {/* {errors.firstname && <p>{errors.firstname}</p>} */}
+            {errors.firstname && <div className={classes.errors}><p>{errors.firstname}</p></div>}
             </div>
             <div>
             <TextField
@@ -113,7 +113,7 @@ export default function Editprofile() {
               value={lastname}
               autoComplete="lastname"
             />
-            {/* {errors.lastname && <p>{errors.lastname}</p>} */}
+            {errors.lastname && <div className={classes.errors}><p>{errors.lastname}</p></div>}
             </div>
             <div>
             {/* <FormControl fullWidth variant="outlined" margin="normal"> */}
@@ -134,40 +134,9 @@ export default function Editprofile() {
                 autoComplete="dob"
               />
             {/* </FormControl> */}
-            {/* {errors.dob && <p>{errors.dob}</p>} */}
+            {errors.dob && <div className={classes.errors}><p>{errors.dob}</p></div>}
             </div>
-            <div>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="mobile"
-              type="number"
-              label="Mobile Number"
-              name="mobile"
-              defaultValue={user.mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              value={mobile}
-              autoComplete="mobile"
-            />
-            {/* {errors.mobile && <p>{errors.mobile}</p>} */}
-            </div>
-            <div>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="email"
-              type="email"
-              label="Email Address"
-              name="email"
-              defaultValue={user.email}
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              autoComplete="email"
-            />
-            {/* {errors.email && <p>{errors.email}</p>} */}
-            </div>
+            
             <Button
                 type="submit"
                 fullWidth

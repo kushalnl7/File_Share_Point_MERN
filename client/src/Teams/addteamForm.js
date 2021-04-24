@@ -88,7 +88,7 @@ export default function Addteam() {
             console.log(errors);
             console.log(teamname, teamtype, description, teamvisibility);
             if(Object.keys(errors).length === 0 && teamname!=="" && description!=="" && teamtype!=="" && teamvisibility!==""){
-                const team_info = await axios.post("http://localhost:5000/team/add", teamData);
+                const team_info = await axios.post(`${process.env.REACT_APP_URL}/team/add`, teamData);
                 // console.log(team_info);
                 toast.success(team_info.data.msg);
                 history.push(`/updateteam/${team_info.data.savedTeam._id}`);
