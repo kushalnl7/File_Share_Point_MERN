@@ -176,7 +176,7 @@ export default function Home() {
       });
       // console.log(res.data.file);
       toast.success("File uploaded successfully!");
-      setGenlink(`http://localhost:3000/download/${res.data.uuid}`);
+      setGenlink(`${process.env.REACT_APP_URL}/download/${res.data.uuid}`);
       setUuid(res.data.uuid);
       getval();
       setTimeout(() => setUploadPercentage(0), 10000);
