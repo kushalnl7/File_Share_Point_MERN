@@ -1,0 +1,9 @@
+{
+  firstname: "Kushal",
+  lastname: "Lahoti",
+  dob: "2000-10-19",
+  mobile: "9767557456",
+  age: "20",
+  email: "kushalnl2000@gmail.com",
+  password: "Kushal@2000",
+}
