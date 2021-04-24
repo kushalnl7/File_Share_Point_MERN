@@ -8,6 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import validateTeamInfo from "./VaidateTeamInfo";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,6 +19,12 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+    },
+    errors:{
+        color: "red",
+        marginTop: "-20px",
+        marginLeft: "22px",
+        marginBottom: "-10px",
     },
 }));
 
@@ -62,14 +69,14 @@ export default function Addteam() {
     const [description, setDescription] = useState("");
     const [teamtype, setTeamtype] = useState("");
     const [teamvisibility, setTeamvisibility] = useState("");
-    const values = { teamname, description, teamtype };
+    const values = { teamname, description, teamtype, teamvisibility };
     const [errors, setErrors] = useState({});
 
     const history = useHistory();
 
     async function addteam(e) {
         e.preventDefault();
-        // setErrors(validateLoginInfo(values));
+        setErrors(validateTeamInfo(values));
         try {
             const teamData = {
                 teamname,
@@ -78,12 +85,14 @@ export default function Addteam() {
                 teamvisibility,
             };
             // console.log("Running 1");
-            // if(Object.keys(errors).length === 0){
-            // console.log(errors);
-            const team_info = await axios.post(`${process.env.REACT_APP_URL}/team/add`, teamData);
-            // console.log(team_info);
-            toast.success(team_info.data.msg);
-            history.push(`/updateteam/${team_info.data.savedTeam._id}`);
+            console.log(errors);
+            console.log(teamname, teamtype, description, teamvisibility);
+            if(Object.keys(errors).length === 0 && teamname!=="" && description!=="" && teamtype!=="" && teamvisibility!==""){
+                const team_info = await axios.post("http://localhost:5000/team/add", teamData);
+                // console.log(team_info);
+                toast.success(team_info.data.msg);
+                history.push(`/updateteam/${team_info.data.savedTeam._id}`);
+            }
             // }
         } catch (err) {
             console.error(err);
@@ -106,8 +115,8 @@ export default function Addteam() {
                     value={teamname}
                     autoComplete="teamname"
                 />
+            {errors.teamname && <div className={classes.errors}><p>{errors.teamname}</p> </div> }
             </div>
-            {/* {errors.email && <p>{errors.email}</p>} */}
             <div>
                 <TextField
                     id="outlined-textarea"
@@ -119,7 +128,7 @@ export default function Addteam() {
                     value={description}
                     autoComplete="description"
                 />
-                {/* {errors.password && <p>{errors.password}</p>} */}
+                {errors.description && <div className={classes.errors}><p>{errors.description}</p></div> }
             </div>
             <div>
                 <TextField
@@ -138,6 +147,7 @@ export default function Addteam() {
                         </MenuItem>
                     ))}
                 </TextField>
+                {errors.teamtype && <div className={classes.errors}><p>{errors.teamtype}</p></div> }
             </div>
             <div>
                 <TextField
@@ -156,6 +166,7 @@ export default function Addteam() {
                         </MenuItem>
                     ))}
                 </TextField>
+                {errors.teamvisibility && <div className={classes.errors}><p>{errors.teamvisibility}</p></div> }
             </div>
             <Button
                 type="submit"

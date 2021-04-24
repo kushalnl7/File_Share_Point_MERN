@@ -107,7 +107,7 @@ export default function Register() {
         password,
         password2,
       };
-      if(Object.keys(errors).length === 0 && firstname!= "" && firstname!= "" && lastname!= "" && dob!= "" && mobile!= "" && password!= "" && password2!= "" && password===password2){
+      if(Object.keys(errors).length === 0 && firstname!= "" && firstname!= "" && lastname!= "" && dob!= "" && mobile!= "" && password!= "" && password2!= "" && password===password2 && password.length>=8 && mobile.length>=10){
         const reg_res = await axios.post(`${process.env.REACT_APP_URL}/auth/register`, registerData);
         await getLoggedIn();
         await getSuperUser();
