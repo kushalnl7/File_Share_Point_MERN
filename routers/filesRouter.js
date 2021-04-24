@@ -148,7 +148,7 @@ router.post("/send", async (req, res) => {
         text: `kushalnl2000@gmail.com shared a file with you.`,
         html: require('../services/emailTemplate')({
             emailFrom: "kushalnl2000@gmail.com",
-            downloadLink: `http://localhost:3000/download/${uuid}`,
+            downloadLink: `${process.env.APP_BASE_URL}/download/${uuid}`,
             size: parseInt(file.size / 1000) + ' KB',
             expires: `${file.timelimit} hours`
         })
@@ -183,7 +183,7 @@ router.post("/send/team/:_id", async (req, res) => {
         text: `${owner.email} shared a file with you.`,
         html: require('../services/emailTemplate')({
             emailFrom: owner.email,
-            downloadLink: `http://localhost:3000/download/${uuid}`,
+            downloadLink: `${process.env.APP_BASE_URL}/download/${uuid}`,
             size: parseInt(file.size / 1000) + ' KB',
             expires: `${file.timelimit} hours`
         })
