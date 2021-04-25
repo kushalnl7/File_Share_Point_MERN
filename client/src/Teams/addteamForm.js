@@ -8,7 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import validateTeamInfo from "./VaidateTeamInfo";
+import validateTeamInfo from "./ValidateTeamInfo";
 
 const useStyles = makeStyles((theme) => ({
     root: {
