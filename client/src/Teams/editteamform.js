@@ -19,6 +19,12 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    errors:{
+        color: "red",
+        marginTop: "-20px",
+        marginLeft: "22px",
+        marginBottom: "-0px",
+    },
 }));
 
 export default function Editteam() {
@@ -52,6 +58,8 @@ export default function Editteam() {
     const [teamtype, setTeamtype] = useState("");
     const values = { teamname, description, teamtype };
     const [errors, setErrors] = useState({});
+    const [errorsname, setErrorsname] = useState("");
+    const [errorsdesc, setErrorsdesc] = useState("");
 
     const history = useHistory();
 
@@ -75,13 +83,26 @@ export default function Editteam() {
                 teamname,
                 description,
             };
+            if(teamname===""){
+                setErrorsname("Team name required");
+            }
+            else{
+                setErrorsname("");
+            }
+            if(description===""){
+                setErrorsdesc("Team description required");
+            }
+            else{
+                setErrorsdesc("");
+            }
             // console.log("Running 1");
             // if(Object.keys(errors).length === 0){
+            if(errorsname==="" && errorsdesc==="" && teamname!=="" && description!==""){
             // console.log(errors);
-            const team_info = await axios.post(`${process.env.REACT_APP_URL}/team/editteamprofile/${ID._id}`, teamData);
-            toast.success(team_info.data);
-            history.push(`/myteams`);
-            // }
+                const team_info = await axios.post(`${process.env.REACT_APP_URL}/team/editteamprofile/${ID._id}`, teamData);
+                toast.success(team_info.data);
+                history.push(`/myteams`);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -105,7 +126,7 @@ export default function Editteam() {
                     autoComplete="teamname"
                 />
             </div>
-            {/* {errors.email && <p>{errors.email}</p>} */}
+            {errorsname!=="" && <div className={classes.errors}><p>{errorsname}</p> </div> }
             <div>
                 <TextField
                     id="outlined-textarea"
@@ -118,7 +139,7 @@ export default function Editteam() {
                     value={description}
                     autoComplete="description"
                 />
-                {/* {errors.password && <p>{errors.password}</p>} */}
+                {errorsdesc!=="" && <div className={classes.errors}><p>{errorsdesc}</p> </div> }
             </div>
             <Button
                 type="submit"
