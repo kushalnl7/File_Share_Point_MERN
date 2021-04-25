@@ -210,15 +210,13 @@ router.post("/editprofile", async (req, res) => {
     
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const owner_id = decodedToken.user;
-        const { firstname, lastname, dob, mobile, email} = req.body;
-        console.log(firstname, lastname, dob, mobile, email);
+        const { firstname, lastname, dob} = req.body;
+        console.log(firstname, lastname, dob);
         await User.findOneAndUpdate({_id: owner_id}, {
             $set:{
                 firstname: firstname, 
                 lastname: lastname, 
-                dob: dob, 
-                mobile: mobile, 
-                email: email
+                dob: dob
             }
         });
 
