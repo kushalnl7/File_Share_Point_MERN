@@ -163,23 +163,42 @@ export default function Home() {
     formData.append('timelimit', timelimit);
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_URL}/api/files/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }, onUploadProgress: progressEvent => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
+      if(!file.name){
+        toast.error("No file chosen!");
+        setUploadPercentage(0);
+      }
+      else if(file.size > 100000000){
+        toast.error("File size more than limit of 100 MB!");
+        setUploadPercentage(0);
+      }
+      else if(timelimit < 1){
+        toast.error("Time limit should be at least 1 hour!")
+        setUploadPercentage(0);
+      }
+      else{
+        const res = await axios.post(`${process.env.REACT_APP_URL}/api/files/`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }, onUploadProgress: progressEvent => {
+            setUploadPercentage(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+          }
+        });
+        // console.log(res.data.file);
+        if(res.data.msg === "File uploaded successfully!"){
+          toast.success(res.data.msg);
+          setGenlink(`${process.env.REACT_APP_URL}/download/${res.data.uuid}`);
+          setUuid(res.data.uuid);
+          getval();
         }
-      });
-      // console.log(res.data.file);
-      toast.success("File uploaded successfully!");
-      setGenlink(`${process.env.REACT_APP_URL}/download/${res.data.uuid}`);
-      setUuid(res.data.uuid);
-      getval();
-      setTimeout(() => setUploadPercentage(0), 10000);
+        else{
+          toast.error(res.data.msg);
+        }
+        setTimeout(() => setUploadPercentage(0), 10000);
+      }
     }
     catch (err) {
       console.log(err);

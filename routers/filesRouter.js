@@ -39,11 +39,11 @@ router.post('/', (req, res) => {
         console.log(req);
         // Validation
         if (!req.file) {
-            return res.json({ error: 'All fields are required.' });
+            return res.json({ msg: 'No file chosen!' });
         }
 
         if (err) {
-            return res.json({ error: err.message });
+            return res.json({ msg: err.message });
         }
         const uuid = uuid4();
         // Update Database 
@@ -59,7 +59,7 @@ router.post('/', (req, res) => {
         });
 
         const response = await file.save();
-        return res.send({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}`, uuid: uuid});
+        return res.send({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}`, uuid: uuid, msg: 'File uploaded successfully!'});
 
     });
 
