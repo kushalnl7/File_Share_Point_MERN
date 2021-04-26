@@ -188,6 +188,10 @@ router.get('/deleteuser', async (req, res) => {
                 }
             });
         }
+        const teams = await Team.find({owner_id: owner_id});
+        for(var i = 0; i < teams.length; i++){
+            await Team.deleteOne({_id: teams[i]._id});
+        }
         const user = await User.deleteOne({_id: owner_id});
         res.cookie("token", "", {
             httpOnly: true,
