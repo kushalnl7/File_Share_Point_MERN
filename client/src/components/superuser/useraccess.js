@@ -67,11 +67,11 @@ const Grantaccess = () => {
         history.push(`/`);
     }
 
-    // async function delReq() {
-    //     const res_msg = await axios.get(`http://localhost:5000/team/deleterequests/${ID._id}`);
-    //     toast.success(res_msg.data); 
-    //     history.push(`/teamprofile/${ID._id}`);
-    // }
+    async function delReq() {
+        const res_msg = await axios.get(`http://localhost:5000/auth/denyaccess`);
+        toast.success(res_msg.data); 
+        history.push(`/`);
+    }
 
     return (
         <div>
@@ -84,13 +84,13 @@ const Grantaccess = () => {
                     <Typography variant="h5" align="center" color="textSecondary" paragraph>
                         Verify new users of your application. Let them share all files in just one click. <b>Enjoy Sharing!</b>
                     </Typography>
-                    {/* <div className={classes.heroButtons}>
+                    <div className={classes.heroButtons}>
                         <Grid container spacing={2} justify="center">
-                            <Grid item>
+                            {/* <Grid item>
                                 <Button variant="contained" color="primary" size="large" href={`/teamprofile/${ID._id}`}>
                                     Team Profile
                                 </Button>
-                            </Grid>
+                            </Grid> */}
                             {norequests === true && (
                             <Grid item>
                                 <Button variant="contained" color="secondary" size="large" onClick={delReq}>
@@ -99,7 +99,7 @@ const Grantaccess = () => {
                             </Grid>
                             )}
                         </Grid>
-                    </div> */}
+                    </div>
                 </Container>
             </div>
             <div className={classes.heroContent2}>

@@ -314,5 +314,22 @@ router.post('/grantuseraccess', async (req, res) => {
     }
 })
 
+router.get('/denyaccess', async (req, res) => {
+    try{
+        const token  = req.cookies['token'];
+        if(!token){
+            return res.json({ error: 'User not logged in.' });
+        }
+
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const owner_id = decodedToken.user;
+        await User.remove({verified: false});
+        res.send("Denied access to all requests successfully!");
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).send(); 
+    }
+})
 
 module.exports = router;
