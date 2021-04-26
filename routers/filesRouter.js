@@ -80,11 +80,11 @@ router.post('/team/:_id', (req, res) => {
         // console.log(req);
 
         if (!req.file) {
-            return res.json({ error: 'All fields are required.' });
+            return res.json({ msg: 'No file chosen!' });
         }
 
         if (err) {
-            return res.json({ error: err.message });
+            return res.json({ msg: err.message });
         }
 
         // Update Database 
@@ -118,7 +118,7 @@ router.post('/team/:_id', (req, res) => {
         // }
         // encrypt([`${uuid_gen}`], uuid_gen, filename_gen);
 
-        return res.send({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}`, uuid: uuid_gen });
+        return res.send({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}`, uuid: uuid_gen, msg: 'File uploaded successfully!'});
 
     });
 
