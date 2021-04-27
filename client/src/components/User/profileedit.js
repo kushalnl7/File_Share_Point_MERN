@@ -69,7 +69,7 @@ export default function Editprofile() {
             };
             console.log(formData);
             console.log("Running 1");
-            if(Object.keys(errors).length === 0 && firstname!=="" && lastname!=="" && dob!==""){
+            if(Object.keys(errors).length === 0 && firstname!=="" && lastname!=="" && dob!=="" && firstname.length>3 && firstname.length<30 && lastname.length>3 && lastname.length<30){
                 const edit_profile = await axios.post(`${process.env.REACT_APP_URL}/auth/editprofile`, formData);
                 toast.success(edit_profile.data);
                 history.push(`/`);

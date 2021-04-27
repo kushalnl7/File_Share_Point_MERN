@@ -94,7 +94,7 @@ export default function Login() {
       };
       // console.log("Running 1");
       // console.log(validateLoginInfo(values));
-      if(Object.keys(errors).length === 0 && email!=="" && password!==""){
+      if(Object.keys(errors).length === 0 && email!=="" && password!=="" && email.length>3 && email.length<320 && password.length>3 && password.length<20){
         setErrors(validateLoginInfo(values))
         console.log("Inside this");
         const log_res = await axios.post(`${process.env.REACT_APP_URL}/auth/login`, loginData);

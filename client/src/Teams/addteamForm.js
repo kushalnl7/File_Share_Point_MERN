@@ -87,7 +87,7 @@ export default function Addteam() {
             // console.log("Running 1");
             console.log(errors);
             console.log(teamname, teamtype, description, teamvisibility);
-            if(Object.keys(errors).length === 0 && teamname!=="" && description!=="" && teamtype!=="" && teamvisibility!==""){
+            if(Object.keys(errors).length === 0 && teamname!=="" && description!=="" && teamtype!=="" && teamvisibility!=="" && teamname.length>3 && teamname.length<30 &&description.length>3 && description.length<500){
                 const team_info = await axios.post(`${process.env.REACT_APP_URL}/team/add`, teamData);
                 // console.log(team_info);
                 toast.success(team_info.data.msg);
