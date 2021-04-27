@@ -122,6 +122,7 @@ export default function Addteam() {
                     id="outlined-textarea"
                     label="Team Description"
                     multiline
+                    required
                     variant="outlined"
                     name="description"
                     onChange={(e) => setDescription(e.target.value)}
