@@ -26,17 +26,18 @@ let upload = multer({
 router.post('/', (req, res) => {
 
     // Storing File
-    console.log(req.myfile);
+    // console.log(req.myfile);
     upload(req, res, async (err) => {
         const token = req.cookies['token'];
         if (!token) {
-            return res.json({ error: 'User not logged in.' });
+            return res.json({ msg: 'User not logged in.' });
         }
         // console.log(req.body.displayname);
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decodedToken.user;
+        const user = await User.findById({_id: userId});
 
-        console.log(req);
+        // console.log(req);
         // Validation
         if (!req.file) {
             return res.json({ msg: 'No file chosen!' });
@@ -55,7 +56,7 @@ router.post('/', (req, res) => {
             uuid: uuid,
             path: req.file.path,
             size: req.file.size,
-            sender: "kushalnl2000@gmail.com"
+            sender: user.email
         });
 
         const response = await file.save();
@@ -104,19 +105,27 @@ router.post('/team/:_id', (req, res) => {
         const response = await file.save();
 
         // try {
-        //     fs.mkdirSync(`/home/kushal/SEM 6/SE/server/raw_encryption/${uuid_gen}`)
+        //     fs.mkdirSync(`${__dirname}/../raw_encryption/${uuid_gen}`)
+        //     // console.log("done mkdir");
         // }
         // catch (err) {
         //     console.log("Folder cannot be created", err);
         // }
 
         // try {
-        //     fs.renameSync(`/home/kushal/SEM 6/SE/server/Uploads/${req.file.filename}`, `/home/kushal/SEM 6/SE/server/raw_encryption/${uuid_gen}/${req.file.filename}`);
+        //     fs.renameSync(`${__dirname}/../Uploads/${req.file.filename}`, `${__dirname}/../raw_encryption/${uuid_gen}/${req.file.filename}`);
+        //     // console.log("done rename");
         // }
         // catch (err) {
         //     console.log("File cannot be moved", err);
         // }
-        // encrypt([`${uuid_gen}`], uuid_gen, filename_gen);
+        // try{
+        //     const enc = await encrypt([`${uuid_gen}`], uuid_gen, filename_gen);
+        //     console.log(enc);
+        // }
+        // catch(err) {
+        //     console.log("Encrption failed!", err);
+        // }
 
         return res.send({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}`, uuid: uuid_gen, msg: 'File uploaded successfully!'});
 
@@ -125,30 +134,28 @@ router.post('/team/:_id', (req, res) => {
 })
 
 router.post("/send", async (req, res) => {
+    const token = req.cookies['token'];
+    if (!token) {
+        return res.json({ msg: 'User not logged in.' });
+    }
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.user;
+    const user = await User.findById({_id: userId});
     const { uuid, emailTo } = req.body;
     if (!uuid || !emailTo) {
         res.send("Enter valid mail-id");
     }
 
     const file = await File.findOne({ uuid: uuid });
-    // if(file.sender){
-    //     res.status(422).send({ error: "Mail Already Sent"});
-    // }
-
-    // file.sender = "kushalnl2000@gmail.com";
-    // file.receiver = emailTo;
-
-    // const response = file.save();
-    // console.log(response.uuid);
     const sendMail = require('../services/emailService');
     sendMail({
         from: "kushalnl2000@gmail.com",
         to: emailTo,
-        subject: 'File Sharing System',
-        text: `kushalnl2000@gmail.com shared a file with you.`,
+        subject: 'File Share Point',
+        text: `${user.firstname} ${user.lastname} shared a file with you.`,
         html: require('../services/emailTemplate')({
-            emailFrom: "kushalnl2000@gmail.com",
-            downloadLink: `${process.env.APP_BASE_URL}/download/${uuid}`,
+            emailFrom: `${user.firstname} ${user.lastname}`,
+            downloadLink: `${process.env.REACT_APP_URL}/download/${uuid}`,
             size: parseInt(file.size / 1000) + ' KB',
             expires: `${file.timelimit} hours`
         })
@@ -177,13 +184,13 @@ router.post("/send/team/:_id", async (req, res) => {
 
     const sendMail = require('../services/emailService');
     sendMail({
-        from: owner.email,
+        from: "kushalnl2000@gmail.com",
         to: members,
-        subject: 'File Sharing System',
-        text: `${owner.email} shared a file with you.`,
+        subject: 'File Share Point',
+        text: `${owner.firstname} ${owner.lastname} shared a file with team ${team.teamname}`,
         html: require('../services/emailTemplate')({
-            emailFrom: owner.email,
-            downloadLink: `${process.env.APP_BASE_URL}/download/${uuid}`,
+            emailFrom: `${owner.firstname} ${owner.lastname}`,
+            downloadLink: `${process.env.REACT_APP_URL}/download/${uuid}`,
             size: parseInt(file.size / 1000) + ' KB',
             expires: `${file.timelimit} hours`
         })
