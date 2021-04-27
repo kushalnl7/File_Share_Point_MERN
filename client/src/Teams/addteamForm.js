@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     errors:{
         color: "red",
         marginTop: "-20px",
-        marginLeft: "22px",
+        marginLeft: "30px",
         marginBottom: "-10px",
     },
 }));

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     errors:{
         color: "red",
         marginTop: "-20px",
-        marginLeft: "22px",
+        marginLeft: "10px",
         marginBottom: "-0px",
     },
 }));
@@ -85,19 +85,22 @@ export default function Editteam() {
             };
             if(teamname===""){
                 setErrorsname("Team name required");
-            }
-            else{
+            } else if(values.teamname.trim().length < 3 || values.teamname.trim().length > 30){
+                setErrorsname('It should be of 3-30 characters');
+            } else{
                 setErrorsname("");
             }
+
             if(description===""){
                 setErrorsdesc("Team description required");
-            }
-            else{
+            } else if(values.description.trim().length < 3 || values.description.trim().length > 500){
+                setErrorsdesc('It should be of 3-500 characters');
+            } else{
                 setErrorsdesc("");
             }
             // console.log("Running 1");
             // if(Object.keys(errors).length === 0){
-            if(errorsname==="" && errorsdesc==="" && teamname!=="" && description!==""){
+            if(errorsname==="" && errorsdesc==="" && teamname!=="" && description!=="" && teamname.length>3 && teamname.length<30 &&description.length>3 && description.length<500){
             // console.log(errors);
                 const team_info = await axios.post(`${process.env.REACT_APP_URL}/team/editteamprofile/${ID._id}`, teamData);
                 toast.success(team_info.data);
