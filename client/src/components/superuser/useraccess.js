@@ -44,7 +44,7 @@ const Grantaccess = () => {
     const [rows, setRows] = useState([]);
     const [norequests, setNorequests] = useState(false);
     const getrows = async () => {
-        const rows_fetch = await axios.get(`http://localhost:5000/auth/getuserrequests`);
+        const rows_fetch = await axios.get(`${process.env.REACT_APP_URL}/auth/getuserrequests`);
         setRows(rows_fetch.data);
         if(rows_fetch.data.length){
             setNorequests(true);
