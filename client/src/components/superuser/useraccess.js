@@ -68,7 +68,7 @@ const Grantaccess = () => {
     }
 
     async function delReq() {
-        const res_msg = await axios.get(`http://localhost:5000/auth/denyaccess`);
+        const res_msg = await axios.get(`${process.env.REACT_APP_URL}/auth/denyaccess`);
         toast.success(res_msg.data); 
         history.push(`/`);
     }
