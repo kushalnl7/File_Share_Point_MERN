@@ -146,7 +146,7 @@ export default function Download() {
             File name - <b>{file.fileName}</b>
           </Typography>
           <Typography variant="h5" align="center" color="textSecondary" paragraph>
-            File size - <b>{file.fileSize} KB!</b>
+            File size - <b>{parseInt(file.fileSize / 1000)} KB!</b>
           </Typography>
           <Typography variant="h5" align="center" color="textSecondary" paragraph>
           Link expires in <b>{file.timeLimit}</b> hours!
