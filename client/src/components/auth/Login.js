@@ -92,7 +92,7 @@ export default function Login() {
         email,
         password,
       };
-      // console.log("Running 1");
+      
       // console.log(validateLoginInfo(values));
       if(Object.keys(errors).length === 0 && email!=="" && password!=="" && email.length>3 && email.length<320 && password.length>3 && password.length<20){
         setErrors(validateLoginInfo(values))
