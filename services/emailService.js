@@ -12,7 +12,7 @@ async function sendMail({from, to, subject, text, html}){
     });
 
     let info = await transporter.sendMail({
-        from: `FileSharingSystem <${from}>`,
+        from: `FileSharePoint <${from}>`,
         to,
         subject,
         text, 
