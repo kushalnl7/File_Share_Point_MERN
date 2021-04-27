@@ -261,32 +261,39 @@ export default function Home() {
   const sendmailHandler = async (e) => {
     e.preventDefault();
     const data = { uuid: uuid, emailTo: emailTo };
-    try {
-      if(emailTo){
-        const res = await axios.post(`${process.env.REACT_APP_URL}/api/files/send`, data, {
-          onUploadProgress: progressEvent => {
-            setmailPercentage(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
+    if (!emailTo) {
+      toast.error('Email required');
+    } else if (!/\S+@\S+\.\S+/.test(emailTo)) {
+      toast.error('Email address is invalid');
+    }
+    else{
+      try {
+        if(emailTo){
+          const res = await axios.post(`${process.env.REACT_APP_URL}/api/files/send`, data, {
+            onUploadProgress: progressEvent => {
+              setmailPercentage(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+            }
+          })
+          // setMailsent(true);
+          if(res.data === "Mail sent successfully!"){
+            toast.success(res.data);
           }
-        })
-        // setMailsent(true);
-        if(res.data === "Mail sent successfully!"){
-          toast.success(res.data);
+          else{
+            toast.error(res.data);
+          }
+          setTimeout(() => setmailPercentage(0), 5000);
         }
         else{
-          toast.error(res.data);
+          toast.error("Enter valid mail-id");
         }
-        setTimeout(() => setmailPercentage(0), 5000);
       }
-      else{
-        toast.error("Enter valid mail-id");
+      catch (err) {
+        console.log(err);
       }
-    }
-    catch (err) {
-      console.log(err);
     }
   }
 
