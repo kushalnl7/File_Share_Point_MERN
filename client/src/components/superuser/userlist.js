@@ -101,7 +101,7 @@ const Allusers = () => {
                         actions={[
                             {
                                 icon: 'delete',
-                                tooltip: 'Add all selected members',
+                                tooltip: 'Delete all selected members',
                                 onClick: (e, data) => delMember(data)
                             }
                         ]}
