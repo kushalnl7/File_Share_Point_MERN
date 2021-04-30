@@ -332,4 +332,67 @@ router.get('/denyaccess', async (req, res) => {
     }
 })
 
+router.get('/getallusers', async (req, res) => {
+    try{
+        const token  = req.cookies['token'];
+        if(!token){
+            return res.json({ error: 'User not logged in.' });
+        }
+
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const owner_id = decodedToken.user;
+        const users = await User.find({});
+        res_members = [];
+        for(var i = 0; i < users.length; i++){
+            if(users[i].verified === true){
+                if(users[i].superuser === true){
+                    continue;
+                }
+                else{
+                    res_members.push(users[i]);
+                }
+            }
+        }
+        res.json(res_members);
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).send(); 
+    }
+})
+
+router.post('/deleteusers', async (req, res) => {
+    try{
+        const token  = req.cookies['token'];
+        if(!token){
+            return res.json({ error: 'User not logged in.' });
+        }
+    
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const owner_id = decodedToken.user;
+        const userdata = req.body;
+        for(var j = 0; j < userdata.length; j++){
+            const usert = await User.findById({_id: userdata[j]._id});
+            for(var i = 0; i < usert.teams.length; i++){
+                const team = await Team.findOneAndUpdate({_id: usert.teams[i]}, {
+                    $pull:{
+                        teammembers: userdata[j]._id
+                    }
+                });
+            }
+            const teams = await Team.find({owner_id: userdata[j]._id});
+            for(var i = 0; i < teams.length; i++){
+                await Team.deleteOne({_id: teams[i]._id});
+            }
+            const user = await User.deleteOne({_id: userdata[j]._id});
+        }
+
+        res.send("Users deleted successfully!");
+      }
+      catch(err){
+          console.error(err);
+          res.status(500).send(); 
+      }
+})
+
 module.exports = router;

@@ -81,6 +81,8 @@ function Navbar() {
                     </Link>
                   </li>
 
+                {superuser === false && (
+                  <>
                   <li className='nav-item'>
                     <Link
                       to='/myteams'
@@ -98,8 +100,11 @@ function Navbar() {
                       Profile
                     </Link>
                   </li>
+                  </>
+                )}
 
                 {superuser === true && (
+                  <>
                   <li className='nav-item'>
                     <Link
                       to='/useraccess'
@@ -108,6 +113,16 @@ function Navbar() {
                       Grant Access
                     </Link>
                   </li>
+
+                  <li className='nav-item'>
+                    <Link
+                      to='/allusers'
+                      className='nav-links'
+                      onClick={closeMobileMenu}>
+                      All users
+                    </Link>
+                  </li>
+                  </>
                 )}
 
                   <li className='nav-item'>

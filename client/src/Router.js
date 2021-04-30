@@ -18,6 +18,8 @@ import Dashboard from "./components/dashboard/Dashboard";
 import Download from "./components/Download/Download";
 import Footer from "./components/Footer/footer";
 import Grantaccess from "./components/superuser/useraccess";
+import { CssBaseline, Link } from "@material-ui/core";
+import Allusers from "./components/superuser/userlist";
 
 function Router() {
   const { loggedIn, superuser } = useContext(AuthContext);
@@ -40,6 +42,14 @@ function Router() {
             <Route exact path="/login">
               <Login />
             </Route>
+            {/* <Route path="*">
+              <>
+              <CssBaseline/>
+              <center><h1>404 NOT FOUND!!</h1></center>
+              <center><h2>Maybe this page moved? Got deleted? Is hiding out in quarantine? Never existed in the first place?<p>Let's go <Link href="/">home</Link> and try from there.</p></h2></center>
+              <Footer />
+              </>
+            </Route> */}
           </>
         )}
         {loggedIn === true && (
@@ -66,13 +76,26 @@ function Router() {
               <Teamprofile />
             </Route>
             {superuser === true && (
+              <>
             <Route exact path="/useraccess">
               <Grantaccess />
             </Route>
+            <Route exact path="/allusers">
+              <Allusers />
+            </Route>
+            </>
             )}
+            {/* <Route path="*">
+            <>
+              <CssBaseline/>
+              <center><h1>404 NOT FOUND!!</h1></center>
+              <center><h2>Maybe this page moved? Got deleted? Is hiding out in quarantine? Never existed in the first place?<p>Let's go <Link href="/">home</Link> and try from there.</p></h2></center>
+              </>
+            </Route> */}
             <Footer />
           </>
         )}
+        
       </Switch>
       
     </BrowserRouter>

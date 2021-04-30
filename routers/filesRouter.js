@@ -25,20 +25,14 @@ let upload = multer({
 
 router.post('/', (req, res) => {
 
-    // Storing File
-    // console.log(req.myfile);
     upload(req, res, async (err) => {
         const token = req.cookies['token'];
         if (!token) {
             return res.json({ msg: 'User not logged in.' });
         }
-        // console.log(req.body.displayname);
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decodedToken.user;
         const user = await User.findById({_id: userId});
-
-        // console.log(req);
-        // Validation
         if (!req.file) {
             return res.json({ msg: 'No file chosen!' });
         }
@@ -47,7 +41,6 @@ router.post('/', (req, res) => {
             return res.json({ msg: err.message });
         }
         const uuid = uuid4();
-        // Update Database 
         const file = new File({
             filename: req.file.filename,
             displayname: req.body.displayname,
